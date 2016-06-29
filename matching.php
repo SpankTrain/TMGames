@@ -1,9 +1,8 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 <style>
 #cards {
-    text-align: center;
-	margin: auto;
-	position: relative;
-	top: 50%;
+  text-align: center;
+  margin: auto;
 }
 
 .card {
@@ -16,367 +15,156 @@
 
 </style>
 
-<div id='cards'>
-    <input type="button" class='card' id="r1c1" name="r1c1" value='1'><input type="button" class='card' id="r1c2" name="r1c2" value='2'><br>
-    <input type="button" class='card' id="r2c1" name="r2c1" value='3'><input type="button" class='card' id="r2c2" name="r2c2" value='4'><br>
-    <input type="button" class='card' id="r3c1" name="r3c1" value='5'><input type="button" class='card' id="r3c2" name="r3c2" value='6'>
-</div>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 <script>
-var cardClick = 0;
-var randomNum1 = Math.floor((Math.random() * 3) + 1);
-var randomNum2 = Math.floor((Math.random() * 3) + 1);
-$('#r' + randomNum1 + 'c1').css('background-color', 'red');
-var color1 = '#r' + randomNum1 + 'c1';
-$('#r' + randomNum2 + 'c2').css('background-color', 'red');
-var color2 = '#r' + randomNum2 + 'c2';
-var randomNum3 = randomNum1;
-var randomNum4 = randomNum2;
-while(randomNum3 == randomNum1)
+count = 1;
+numRC = 0;
+cardIds = [];
+colors = [];
+pairs = [];
+getHeightAndWidth();
+shuffle(cardIds);
+setColors();
+console.log(pairs);
+firstClick = '';
+secondClick = '';
+function getHeightAndWidth()
 {
-	randomNum3 = Math.floor((Math.random() * 3) + 1);
+  var x = -1;
+  while(x < 0)
+  {
+    var num=prompt("Enter an even number between 2 and 10","2");
+    if (num!=null && Number(num) >= 2 && Number(num) <= 10 && Number(num)%2 == 0)
+    {
+      x = Number(num);
+      numRC = x;
+      printCards(x);
+      generateColors(x);
+    }
+  }
 }
-while(randomNum4 == randomNum2)
+
+function printCards(num)
 {
-	randomNum4 = Math.floor((Math.random() * 3) + 1);
+  document.write("<div id='cards'>")
+  for(var i = 0; i < num; i++)
+  {
+    for(var j = 0; j < num; j++)
+    {
+      var card = "r"+i+"c"+j;
+      cardIds.push(card);
+      document.write("<input type='button' class='card' id='"+card+"' name='"+card+"' value='"+count+"'>");
+      count++;
+    }
+    document.write("<br>");
+  }
+  document.write("</div>");
 }
-$('#r' + randomNum3 + 'c1').css('background-color', 'blue');
-var color3 = '#r' + randomNum3 + 'c1';
-$('#r' + randomNum4 + 'c2').css('background-color', 'blue');
-var color4 = '#r' + randomNum4 + 'c2';
-var randomNum5 = randomNum3;
-var randomNum6 = randomNum4;
-while(randomNum5 == randomNum3 || randomNum5 == randomNum1)
+
+function generateColors(x)
 {
-	randomNum5 = Math.floor((Math.random() * 3) + 1);
+  var n = (x*x)/2;
+  for(var i = 0; i < n; i++)
+  {
+    var randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+    if(colors.indexOf(randomColor) < 0)
+    {
+      colors.push(randomColor);
+    }
+  }
 }
-while(randomNum6 == randomNum4 || randomNum6 == randomNum2)
+
+function setColors()
 {
-	randomNum6 = Math.floor((Math.random() * 3) + 1);
+  var cardCount = 0;
+  for(var i = 0; i < colors.length; i++)
+  {
+    var card1 = cardIds[cardCount];
+    var color = colors[i];
+    $("#"+cardIds[cardCount]).css("background-color",colors[i]);
+    cardCount++;
+    var card2 = cardIds[cardCount];
+    $("#"+cardIds[cardCount]).css("background-color",colors[i]);
+    cardCount++;
+
+    var pair = {
+      "card1":card1,
+      "card2":card2,
+      "color":color
+    }
+    pairs.push(pair);
+  }
 }
-$('#r' + randomNum5 + 'c1').css('background-color', 'green');
-var color5 = '#r' + randomNum5 + 'c1';
-$('#r' + randomNum6 + 'c2').css('background-color', 'green');
-var color6 = '#r' + randomNum6 + 'c2';
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+}
 
 setTimeout(function(){
-$('#r1c1').css('background-color', 'transparent');
-$('#r1c2').css('background-color', 'transparent');
-$('#r2c1').css('background-color', 'transparent');
-$('#r2c2').css('background-color', 'transparent');
-$('#r3c1').css('background-color', 'transparent');
-$('#r3c2').css('background-color', 'transparent');
+  $.each(pairs, function( index, value ) {
+    var pair = value;
+    var c1 = value["card1"];
+    var c2 = value["card2"];
+    $("#"+c1).css('background-color', 'transparent');
+    $("#"+c2).css('background-color', 'transparent');
+  });
 },5000);
 
-var color = '';
-var currentColor = '';
-var first = '';
-var total = 0;
-
-$('#r1c1').click(function() {
-	if('#r1c1' == color1)
-	{
-		color = 'red';
-	}
-	else if('#r1c1' == color2)
-	{
-		color = 'red';
-	}
-	else if('#r1c1' == color3)
-	{
-		color = 'blue';
-	}
-	else if('#r1c1' == color4)
-	{
-		color = 'blue';
-	}
-	else if('#r1c1' == color5)
-	{
-		color = 'green';
-	}
-	else if('#r1c1' == color6)
-	{
-		color = 'green';
-	}
-	$('#r1c1').css('background-color', color);
-	if(first == '')
-	{
-		first = 1;
-		currentColor = color;
-	}
-	else if(first == 1)
-	{
-		if(color == currentColor)
-		{
-			alert("Match found");
-		}
-		else
-		{
-			alert("YOU LOST!");
-			total = 0;
-		}
-		first = '';
-	}
-	total++;
-	if(total == 6)
-	{
-		alert("YOU FOUND ALL THE MATCHES!");
-	}
+$('.card').click(function() {
+  if(firstClick == '')
+  {
+    firstClick = $(this).attr('id');
+  }
+  else if(secondClick == '')
+  {
+    secondClick = $(this).attr('id');
+    if(firstClick == secondClick)
+    {
+      secondClick = '';
+    }
+    if(secondClick != '')
+    {
+      if(checkMatch(firstClick,secondClick))
+      {
+        firstClick = '';
+        secondClick = '';
+      }
+      else
+      {
+        alert("You Lose!");
+      }
+    }
+  }
 });
 
-$('#r2c1').click(function() {
-	if('#r2c1' == color1)
-	{
-		color = 'red';
-	}
-	else if('#r2c1' == color2)
-	{
-		color = 'red';
-	}
-	else if('#r2c1' == color3)
-	{
-		color = 'blue';
-	}
-	else if('#r2c1' == color4)
-	{
-		color = 'blue';
-	}
-	else if('#r2c1' == color5)
-	{
-		color = 'green';
-	}
-	else if('#r2c1' == color6)
-	{
-		color = 'green';
-	}
-	$('#r2c1').css('background-color', color);
-	if(first == '')
-	{
-		first = 1;
-		currentColor = color;
-	}
-	else if(first == 1)
-	{
-		if(color == currentColor)
-		{
-			alert("Match found");
-		}
-		else
-		{
-			alert("YOU LOST!");
-			total = 0;
-		}
-		first = '';
-	}
-	total++;
-	if(total == 6)
-	{
-		alert("YOU FOUND ALL THE MATCHES!");
-	}
-});
-
-$('#r3c1').click(function() {
-	if('#r3c1' == color1)
-	{
-		color = 'red';
-	}
-	else if('#r3c1' == color2)
-	{
-		color = 'red';
-	}
-	else if('#r3c1' == color3)
-	{
-		color = 'blue';
-	}
-	else if('#r3c1' == color4)
-	{
-		color = 'blue';
-	}
-	else if('#r3c1' == color5)
-	{
-		color = 'green';
-	}
-	else if('#r3c1' == color6)
-	{
-		color = 'green';
-	}
-	$('#r3c1').css('background-color', color);
-	if(first == '')
-	{
-		first = 1;
-		currentColor = color;
-	}
-	else if(first == 1)
-	{
-		if(color == currentColor)
-		{
-			alert("Match found");
-		}
-		else
-		{
-			alert("YOU LOST!");
-			total = 0;
-		}
-		first = '';
-	}
-	total++;
-	if(total == 6)
-	{
-		alert("YOU FOUND ALL THE MATCHES!");
-	}
-});
-
-$('#r1c2').click(function() {
-	if('#r1c2' == color1)
-	{
-		color = 'red';
-	}
-	else if('#r1c2' == color2)
-	{
-		color = 'red';
-	}
-	else if('#r1c2' == color3)
-	{
-		color = 'blue';
-	}
-	else if('#r1c2' == color4)
-	{
-		color = 'blue';
-	}
-	else if('#r1c2' == color5)
-	{
-		color = 'green';
-	}
-	else if('#r1c2' == color6)
-	{
-		color = 'green';
-	}
-	$('#r1c2').css('background-color', color);
-	if(first == '')
-	{
-		first = 1;
-		currentColor = color;
-	}
-	else if(first == 1)
-	{
-		if(color == currentColor)
-		{
-			alert("Match found");
-		}
-		else
-		{
-			alert("YOU LOST!");
-			total = 0;
-		}
-		first = '';
-	}
-	total++;
-	if(total == 6)
-	{
-		alert("YOU FOUND ALL THE MATCHES!");
-	}
-});
-
-$('#r2c2').click(function() {
-	if('#r2c2' == color1)
-	{
-		color = 'red';
-	}
-	else if('#r2c2' == color2)
-	{
-		color = 'red';
-	}
-	else if('#r2c2' == color3)
-	{
-		color = 'blue';
-	}
-	else if('#r2c2' == color4)
-	{
-		color = 'blue';
-	}
-	else if('#r2c2' == color5)
-	{
-		color = 'green';
-	}
-	else if('#r2c2' == color6)
-	{
-		color = 'green';
-	}
-	$('#r2c2').css('background-color', color);
-	if(first == '')
-	{
-		first = 1;
-		currentColor = color;
-	}
-	else if(first == 1)
-	{
-		if(color == currentColor)
-		{
-			alert("Match found");
-		}
-		else
-		{
-			alert("YOU LOST!");
-			total = 0;
-		}
-		first = '';
-	}
-	total++;
-	if(total == 6)
-	{
-		alert("YOU FOUND ALL THE MATCHES!");
-	}
-});
-
-$('#r3c2').click(function() {
-	if('#r3c2' == color1)
-	{
-		color = 'red';
-	}
-	else if('#r3c2' == color2)
-	{
-		color = 'red';
-	}
-	else if('#r3c2' == color3)
-	{
-		color = 'blue';
-	}
-	else if('#r3c2' == color4)
-	{
-		color = 'blue';
-	}
-	else if('#r3c2' == color5)
-	{
-		color = 'green';
-	}
-	else if('#r3c2' == color6)
-	{
-		color = 'green';
-	}
-	$('#r3c2').css('background-color', color);
-	if(first == '')
-	{
-		first = 1;
-		currentColor = color;
-	}
-	else if(first == 1)
-	{
-		if(color == currentColor)
-		{
-			alert("Match found");
-		}
-		else
-		{
-			alert("YOU LOST!");
-			total = 0;
-		}
-		first = '';
-	}
-	total++;
-	if(total == 6)
-	{
-		alert("YOU FOUND ALL THE MATCHES!");
-	}
-});
+function checkMatch(a,b)
+{
+  var isMatch = false;
+  $.each(pairs, function( index, value ) {
+    var pair = value;
+    var c1 = value["card1"];
+    var c2 = value["card2"];
+    var color = value["color"];
+    if((a == c1 || a == c2) && (b == c1 || b == c2))
+    {
+      $("#"+c1).css("background-color",color);
+      $("#"+c2).css("background-color",color);
+      isMatch = true;
+    }
+  });
+  return isMatch;
+}
 </script>
