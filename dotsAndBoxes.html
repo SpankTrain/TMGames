@@ -68,20 +68,7 @@
 <div id="defaultRed"></div>
 <div id="defaultBlue"></div>
 <b id="currentColor">Current Color</b>
-<div id="grid">
-  <?php
-    for($i = 0; $i < 11; $i++)
-    {
-      echo "<div class='row' id='row$i'>";
-      for($j = 0; $j < 11; $j++)
-      {
-        $id = "r".$i."-c".$j;
-        echo "<div class='box' id='$id'></div>";
-      }
-      echo "</div>";
-    }
-  ?>
-</div>
+<div id="grid"></div>
 <div id="scores">
 <b><u>Score</u></b><br>
 <b style="color: blue">Blue: </b><b id="blueScore">0</b><br>
@@ -91,7 +78,21 @@
 <script>
 var currentColor = "blue";
 
+generateGrid();
 String.prototype.firstNumber = function () {return this.match(/\d+\.?\d*/)}
+
+function generateGrid() {
+  var grid = "";
+  for(var i = 0; i < 11; i++) {
+    grid += "<div class='row' id='row"+i+"'>";
+    for(var j = 0; j < 11; j++) {
+      var id = "r"+i+"-c"+j;
+      grid += "<div class='box' id='"+id+"'></div>";
+    }
+    grid += "</div>";
+  }
+  $("#grid").html(grid);
+}
 
 $('.box').click(function(e){
   var id = $(this).attr('id');
